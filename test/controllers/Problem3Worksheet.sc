@@ -1,21 +1,39 @@
-import scala.annotation.tailrec
 
-def primeFactorOf (n: Int): Unit = {
 
+val primes = BigInt(2) #:: Stream.iterate(BigInt(3))(_ + 2).filter(_.isProbablePrime(10))
+
+
+def primeFactorOf(i: BigInt): Option[BigInt] = {
+  val j: BigInt = i.sqrt
+  primes.takeWhile(_ <= j).filter(i % _ == 0).lastOption
 }
 
-def isPrime3(n: Int): Boolean = {
-  if (n == 2 || n == 3) {
-    true
-  } else if (n < 2 || n % 2 == 0) {
-    false
-  } else {
-    isPrime3Rec(n, 3)
+implicit class BigIntSqrt (n: BigInt) {
+
+
+ def sqrt: BigInt = {
+
+    assert(n > -1)
+    if (n < 2) {
+      n
+    } else {
+      val smallCandidate = (n >> 2).sqrt << 1
+      val largeCandidate = smallCandidate + 1
+      if (largeCandidate.pow(2) > n) {
+        smallCandidate
+      } else {
+        largeCandidate
+      }
+    }
   }
+
+
 }
 
-@tailrec
-def isPrime3Rec(n:Int, i: Int): Boolean = {
-  (n % i != 0) && ((i * i > n) || isPrime3Rec(n, i + 2))
-}
+
+
+primeFactorOf(BigInt("600851475143"))
+
+BigIntSqrt(16).sqrt
+
 
